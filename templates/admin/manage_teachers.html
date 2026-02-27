@@ -1,0 +1,181 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Admin — Manage Teachers{% endblock %}
+{% block top_title %}Manage Teachers{% endblock %}
+
+{% block body %}
+
+<style>
+  .compact-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compact-table th {
+    font-size: 0.63rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 11px 12px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .compact-table td {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .compact-table td.qual-col {
+    white-space: normal;
+    max-width: 200px;
+    word-break: break-word;
+    line-height: 1.45;
+    font-size: 0.76rem;
+    color: rgba(245,240,232,0.50);
+  }
+  .compact-table td.name-col {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--cream);
+    font-size: 0.83rem;
+  }
+  .compact-table tbody tr:hover { background: rgba(201,168,76,0.04); }
+  .compact-table tbody tr:last-child td { border-bottom: none; }
+
+  /* Same action buttons as manage_students */
+  .act-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.74rem;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+  .act-del  { background: rgba(224,90,90,0.1); color: #e05a5a; }
+  .act-del:hover  { background: #e05a5a; color: #fff; }
+  .act-edit { background: rgba(201,168,76,0.1); color: var(--gold); }
+  .act-edit:hover { background: var(--gold); color: var(--ink); }
+
+  /* Gender badges */
+  .g-male   { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); padding: 2px 8px; border-radius: 20px; font-size: 0.65rem; }
+  .g-female { background: rgba(200,100,200,0.1); color: #d4a0d4; border: 1px solid rgba(200,100,200,0.2); padding: 2px 8px; border-radius: 20px; font-size: 0.65rem; }
+</style>
+
+<div class="page-heading">
+  <div class="eyebrow">Faculty Records</div>
+  <h1>Manage Teachers</h1>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+  <p style="color:var(--muted);font-size:0.84rem;">{{ teachers|length }} teacher{{ teachers|length|pluralize }} registered</p>
+  <a href="{% url 'add_teacher' %}" class="btn-submit" style="text-decoration:none;padding:9px 20px;font-size:0.78rem;">
+    <i class="bi bi-person-plus-fill"></i> Add Teacher
+  </a>
+</div>
+
+<div class="panel-card">
+  <table class="compact-table">
+    <thead>
+      <tr>
+        <th style="width:36px;">#</th>
+        <th>Full Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Qualification</th>
+        <th style="width:70px;text-align:center;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for teacher in teachers %}
+      <tr>
+        <td style="color:var(--muted);font-size:0.72rem;">{{ forloop.counter }}</td>
+        <td class="name-col">{{ teacher.full_name }}</td>
+        <td>
+          {% if teacher.gender == 'Male' %}
+            <span class="g-male">Male</span>
+          {% else %}
+            <span class="g-female">Female</span>
+          {% endif %}
+        </td>
+        <td style="color:var(--muted);font-size:0.76rem;">{{ teacher.email }}</td>
+        <td style="color:var(--muted);font-size:0.76rem;">{{ teacher.contact_num }}</td>
+        <td class="qual-col">{{ teacher.qualification }}</td>
+        <td style="text-align:center;">
+          <div style="display:flex;gap:5px;justify-content:center;">
+            <a href="{% url 'delete_teacher' teacher.id %}" class="act-btn act-del" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+            <button class="act-btn act-edit" data-bs-toggle="modal" data-bs-target="#updateModal{{ teacher.id }}" title="Edit">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <!-- UPDATE MODAL — ID matches button target -->
+      <div class="modal fade" id="updateModal{{ teacher.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="bi bi-person-badge-fill" style="color:var(--gold);margin-right:8px;"></i>
+                Update Teacher — {{ teacher.full_name }}
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'update_teacher' teacher.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+                  <div class="field-group">
+                    <label class="field-label">Full Name</label>
+                    <input type="text" name="full_name" value="{{ teacher.full_name }}" class="field-input" required>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Email</label>
+                    <input type="email" name="email" value="{{ teacher.email }}" class="field-input" required>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Contact Number</label>
+                    <input type="number" name="contact_number" value="{{ teacher.contact_num }}" class="field-input" required>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Gender</label>
+                    <select name="gender" class="field-input" required>
+                      <option selected>{{ teacher.gender }}</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field-group" style="margin-top:4px;">
+                  <label class="field-label">Qualification</label>
+                  <textarea name="qualification" class="field-input" rows="3" required>{{ teacher.qualification }}</textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal"
+                  style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--cream);border-radius:4px;padding:8px 18px;cursor:pointer;font-size:0.82rem;">
+                  Cancel
+                </button>
+                <button type="submit" class="btn-submit" style="padding:8px 22px;font-size:0.8rem;">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

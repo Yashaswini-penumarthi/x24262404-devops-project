@@ -1,0 +1,117 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Admin — Add Notice{% endblock %}
+{% block top_title %}Add Notice{% endblock %}
+
+{% block body %}
+<style>
+  .add-page {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    align-items: start;
+  }
+  .info-aside {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+  .aside-visual {
+    width: 100%;
+    height: 180px;
+    background:
+      linear-gradient(160deg, rgba(201,168,76,0.15), rgba(13,17,23,0.8)),
+      url('https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=600&q=80') center/cover no-repeat;
+  }
+  .aside-body { padding: 28px; }
+  .aside-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+  .aside-body p { font-size: 0.83rem; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+  .scope-card {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .scope-card i { color: var(--gold); font-size: 0.95rem; margin-top: 2px; }
+  .scope-card strong { display: block; font-size: 0.82rem; color: var(--cream); margin-bottom: 3px; }
+  .scope-card span { font-size: 0.76rem; color: var(--muted); line-height: 1.5; }
+</style>
+
+<div class="page-heading">
+  <div class="eyebrow">Announcements</div>
+  <h1>Post New Notice</h1>
+</div>
+
+<div class="add-page">
+  <!-- FORM -->
+  <div class="form-section">
+    <h2>Notice Details</h2>
+    <p class="subtitle">Compose and publish an institutional announcement</p>
+
+    <form action="{% url 'add_notice' %}" method="post">
+      {% csrf_token %}
+
+      <div class="field-group">
+        <label class="field-label">Notice Title</label>
+        <input type="text" name="notice_title" class="field-input" placeholder="e.g. End-Semester Examination Schedule" required>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Notice Content</label>
+        <textarea name="notice_content" class="field-input" rows="10" placeholder="Write the full notice content here..." required></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Visibility Scope</label>
+        <select name="notice_status" class="field-input">
+          <option value="True">Public — Visible to everyone</option>
+          <option value="False">Students Only — Visible after login</option>
+        </select>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        <button type="submit" class="btn-submit">
+          <i class="bi bi-send-fill" style="margin-right:8px;"></i> Publish Notice
+        </button>
+        <a href="{% url 'manage_notices' %}" style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--muted);font-size:0.85rem;text-decoration:none;" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- ASIDE -->
+  <div class="info-aside">
+    <div class="aside-visual"></div>
+    <div class="aside-body">
+      <h3>Visibility Options</h3>
+      <p>Choose who can see this notice:</p>
+      <div class="scope-card">
+        <i class="bi bi-globe2"></i>
+        <div>
+          <strong>Public</strong>
+          <span>Displayed on the homepage. Visible to all visitors without login.</span>
+        </div>
+      </div>
+      <div class="scope-card">
+        <i class="bi bi-lock-fill"></i>
+        <div>
+          <strong>Students Only</strong>
+          <span>Visible only to logged-in students in their portal dashboard.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

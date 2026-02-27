@@ -1,0 +1,151 @@
+{% extends 'student/student_base.html' %}
+
+{% block title %}Student — Notices{% endblock %}
+{% block top_title %}Notices{% endblock %}
+
+{% block body %}
+<style>
+  .notices-hero {
+    background:
+      linear-gradient(135deg, rgba(42,157,143,0.1), rgba(8,12,16,0.5)),
+      url('https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&q=80') right center/cover no-repeat;
+    border: 1px solid rgba(42,157,143,0.15);
+    border-radius: 8px;
+    padding: 48px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .notices-hero::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--teal), transparent);
+  }
+  .notices-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .notices-hero p { font-size: 0.88rem; color: var(--muted); }
+  .notices-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(42,157,143,0.12);
+    border: 1px solid rgba(42,157,143,0.25);
+    color: var(--teal);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    margin-bottom: 32px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--teal); }
+
+  .notice-list { display: flex; flex-direction: column; gap: 16px; }
+  .notice-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 24px 200px 1fr;
+    gap: 20px;
+    align-items: start;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .notice-item::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--teal);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .notice-item:hover { border-color: rgba(42,157,143,0.35); transform: translateY(-1px); }
+  .notice-item:hover::before { opacity: 1; }
+  .notice-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgba(42,157,143,0.3);
+    padding-top: 2px;
+  }
+  .notice-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.4;
+  }
+  .notice-content {
+    font-size: 0.88rem;
+    color: rgba(240,237,232,0.65);
+    line-height: 1.75;
+  }
+  .empty-state {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 80px;
+    text-align: center;
+  }
+  .empty-state i {
+    font-size: 3rem;
+    color: rgba(42,157,143,0.25);
+    display: block;
+    margin-bottom: 20px;
+  }
+  .empty-state h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--cream); margin-bottom:10px; }
+  .empty-state p { font-size:0.85rem; color:var(--muted); }
+</style>
+
+<a href="{% url 'student_dashboard' %}" class="back-link">
+  <i class="bi bi-arrow-left-circle-fill"></i> Back to Dashboard
+</a>
+
+<div class="page-heading">
+  <div class="eyebrow">Announcements</div>
+  <h1>Notices for Students</h1>
+</div>
+
+<!-- HERO STRIP -->
+<div class="notices-hero">
+  <div class="notices-count"><i class="bi bi-megaphone-fill"></i> {{ notices|length }} Active Notice{{ notices|length|pluralize }}</div>
+  <h2>Stay Informed</h2>
+  <p>All academic notices and announcements from the institution are listed here.</p>
+</div>
+
+{% if notices %}
+<div class="notice-list">
+  {% for notice in notices|dictsortreversed:"id" %}
+  <div class="notice-item">
+    <span class="notice-num">{{ forloop.counter }}</span>
+    <div class="notice-title">{{ notice.title }}</div>
+    <div class="notice-content">{{ notice.content }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-megaphone"></i>
+  <h3>No Notices Available</h3>
+  <p>There are no notices published for students at this time. Check back later.</p>
+</div>
+{% endif %}
+{% endblock %}

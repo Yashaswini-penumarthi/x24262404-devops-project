@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<style>
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    padding-top: 72px;
+  }
+  .login-visual {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-visual-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(160deg, rgba(8,12,16,0.7) 0%, rgba(8,12,16,0.4) 100%),
+      url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1400&q=80') center/cover no-repeat;
+  }
+  .login-visual-content {
+    position: relative; z-index: 2;
+    padding: 80px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .login-visual-content .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(42,157,143,0.15);
+    border: 1px solid rgba(42,157,143,0.3);
+    color: #2a9d8f;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+  .login-visual-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #f0ede8;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .login-visual-content p {
+    color: rgba(240,237,232,0.55);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 420px;
+  }
+  .login-panel {
+    width: 500px;
+    min-width: 420px;
+    background: #1d3d32;
+    border-left: 1px solid rgba(42,157,143,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+  }
+  .login-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #2a9d8f;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .login-eyebrow::before { content: ''; width: 20px; height: 1px; background: #2a9d8f; display: block; }
+  .login-panel h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #f0ede8;
+    margin-bottom: 8px;
+  }
+  .login-panel .sub { font-size: 0.85rem; color: #5a6580; margin-bottom: 44px; }
+  .field-group { margin-bottom: 20px; }
+  .field-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #5a6580;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .field-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 13px 16px;
+    color: #f0ede8;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field-input:focus { border-color: #2a9d8f; background: rgba(42,157,143,0.05); }
+  .field-input::placeholder { color: rgba(240,237,232,0.2); }
+  .btn-teal {
+    width: 100%;
+    background: #2a9d8f;
+    color: #080c10;
+    border: none;
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-teal:hover { background: #3bbcac; transform: translateY(-1px); }
+  .login-footer-note {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #5a6580;
+  }
+  .login-footer-note a { color: #2a9d8f; text-decoration: none; }
+</style>
+
+<div class="login-page">
+  <!-- VISUAL -->
+  <div class="login-visual">
+    <div class="login-visual-bg"></div>
+    <div class="login-visual-content">
+      <div class="tag"><i class="bi bi-mortarboard-fill"></i> Student Portal</div>
+      <h2>Your Academic<br>Journey Awaits</h2>
+      <p>Access your profile, academic records, and institutional notices — all through a single secure portal.</p>
+    </div>
+  </div>
+
+  <!-- PANEL -->
+  <div class="login-panel">
+    <div class="login-eyebrow">Student Access</div>
+    <h1>Welcome Back</h1>
+    <p class="sub">Sign in to your student account</p>
+
+    <form action="{% url 'student_login' %}" method="post">
+      {% csrf_token %}
+      <div class="field-group">
+        <label class="field-label" for="userName">Username</label>
+        <input type="text" id="userName" name="userName" class="field-input" placeholder="Your student username">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="stuPwd">Password</label>
+        <input type="password" id="stuPwd" name="stuPwd" class="field-input" placeholder="••••••••">
+      </div>
+      <input type="submit" class="btn-teal" value="Sign In">
+    </form>
+
+    <p class="login-footer-note">Need help? Contact your <a href="#">institution administrator</a></p>
+  </div>
+</div>
+{% endblock %}

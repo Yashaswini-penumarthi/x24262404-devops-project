@@ -1,0 +1,187 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Admin — Add Student{% endblock %}
+{% block top_title %}Add Student{% endblock %}
+
+{% block body %}
+<style>
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .section-divider {
+    padding: 24px 0 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-divider span {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+  .section-divider i { color: var(--gold); }
+  .add-page {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    align-items: start;
+  }
+  .info-aside {
+    position: sticky;
+    top: 80px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .aside-img {
+    width: 100%; height: 200px;
+    background:
+      linear-gradient(180deg, rgba(13,17,23,0.2), rgba(13,17,23,0.75)),
+      url('https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80') center/cover no-repeat;
+  }
+  .aside-body { padding: 28px; }
+  .aside-body h3 { font-family:'Playfair Display',serif; font-size:1rem; color:var(--cream); margin-bottom:10px; }
+  .aside-body p { font-size:0.82rem; color:var(--muted); line-height:1.7; }
+  .aside-fields {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .aside-field-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .aside-field-row span:first-child { color: var(--muted); }
+  .aside-field-row span:last-child { color: var(--cream); }
+</style>
+
+<div class="page-heading">
+  <div class="eyebrow">Student Management</div>
+  <h1>Register New Student</h1>
+</div>
+
+<div class="add-page">
+  <!-- MAIN FORM -->
+  <div class="form-section">
+    <h2>Student Details</h2>
+    <p class="subtitle">Fill in the student's personal and academic information</p>
+
+    <form action="{% url 'add_student' %}" method="post">
+      {% csrf_token %}
+
+      <div class="section-divider"><i class="bi bi-person-fill"></i><span>Personal Information</span></div>
+      <div class="grid-2">
+        <div class="field-group">
+          <label class="field-label">Full Name</label>
+          <input type="text" name="full_name" class="field-input" placeholder="Student's full legal name" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Student ID</label>
+          <input type="text" name="stu_id" class="field-input" placeholder="e.g. STU2025001" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Father's Name</label>
+          <input type="text" name="f_name" class="field-input" placeholder="Father's full name">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Mother's Name</label>
+          <input type="text" name="m_name" class="field-input" placeholder="Mother's full name">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Date of Birth</label>
+          <input type="date" name="dob" class="field-input">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Gender</label>
+          <select name="gender" class="field-input">
+            <option value="" disabled selected>Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-divider"><i class="bi bi-geo-alt-fill"></i><span>Contact & Address</span></div>
+      <div class="grid-2">
+        <div class="field-group">
+          <label class="field-label">Email Address</label>
+          <input type="email" name="stu_email" class="field-input" placeholder="student@email.com" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Contact Number</label>
+          <input type="tel" name="contact_number" class="field-input" placeholder="+91 98765 43210">
+        </div>
+        <div class="field-group">
+          <label class="field-label">City</label>
+          <input type="text" name="city" class="field-input" placeholder="City">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Permanent Address</label>
+          <input type="text" name="address" class="field-input" placeholder="Full address">
+        </div>
+      </div>
+
+      <div class="section-divider"><i class="bi bi-mortarboard-fill"></i><span>Academic Details</span></div>
+      <div class="grid-2">
+        <div class="field-group">
+          <label class="field-label">Course</label>
+          <select name="course" class="field-input">
+            <option value="" disabled selected>Select Course</option>
+            <option value="BSC">BSC</option>
+            <option value="BA">BA</option>
+            <option value="BCOM">BCOM</option>
+            <option value="BBA">BBA</option>
+            <option value="BCA">BCA</option>
+            <option value="BTECH">BTECH</option>
+            <option value="MSC">MSC</option>
+            <option value="MA">MA</option>
+            <option value="MCOM">MCOM</option>
+            <option value="MBA">MBA</option>
+            <option value="MCA">MCA</option>
+            <option value="MTECH">MTECH</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-divider"><i class="bi bi-key-fill"></i><span>Login Credentials</span></div>
+      <div class="grid-2">
+        <div class="field-group">
+          <label class="field-label">Username</label>
+          <input type="text" name="stu_user_name" class="field-input" placeholder="Login username">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <input type="password" name="stu_pwd" class="field-input" placeholder="Set a secure password">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:16px;">
+        <button type="submit" class="btn-submit">
+          <i class="bi bi-person-plus-fill" style="margin-right:8px;"></i> Register Student
+        </button>
+        <a href="{% url 'manage_students' %}" style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--muted);font-size:0.85rem;text-decoration:none;">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- ASIDE -->
+  <div class="info-aside">
+    <div class="aside-img"></div>
+    <div class="aside-body">
+      <h3>Student Registration</h3>
+      <p>Students will be able to log in using the username and password you set here.</p>
+      <div class="aside-fields">
+        <div class="aside-field-row"><span>Required Fields</span><span>Name, Email, ID</span></div>
+        <div class="aside-field-row"><span>Login Access</span><span>Username + Password</span></div>
+        <div class="aside-field-row"><span>Visibility</span><span>Immediately active</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

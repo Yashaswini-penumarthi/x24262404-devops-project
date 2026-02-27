@@ -1,0 +1,94 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Admin — Manage Notices{% endblock %}
+{% block top_title %}Manage Notices{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div class="eyebrow">Announcements</div>
+  <h1>Manage Notices</h1>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <p style="color:var(--muted);font-size:0.88rem;">All institutional announcements</p>
+  <a href="{% url 'add_notice' %}" class="btn-submit" style="text-decoration:none;padding:11px 24px;font-size:0.8rem;">
+    <i class="bi bi-plus-lg"></i> New Notice
+  </a>
+</div>
+
+<div class="panel-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Content Preview</th>
+        <th>Scope</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for notice in notices %}
+      <tr>
+        <td style="color:var(--muted);font-size:0.8rem;">{{ forloop.counter }}</td>
+        <td style="font-family:'Playfair Display',serif;font-weight:600;color:var(--cream);font-size:0.92rem;">{{ notice.title }}</td>
+        <td style="color:var(--muted);max-width:380px;">{{ notice.content|truncatechars:80 }}</td>
+        <td>
+          {% if notice.isPublic %}
+            <span class="badge-success"><i class="bi bi-globe2"></i> Public</span>
+          {% else %}
+            <span class="badge-gold"><i class="bi bi-lock-fill"></i> Students</span>
+          {% endif %}
+        </td>
+        <td>
+          <div style="display:flex;gap:8px;">
+            <a href="{% url 'delete_notice' notice.id %}" class="action-btn action-btn-danger" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+            <button class="action-btn action-btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ notice.id }}" title="Edit">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <!-- EDIT MODAL -->
+      <div class="modal fade" id="editModal{{ notice.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><i class="bi bi-pencil-square" style="color:var(--gold);margin-right:8px;"></i> Edit Notice</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'update_notice' notice.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body">
+                <div class="field-group">
+                  <label class="field-label">Title</label>
+                  <input type="text" name="title" value="{{ notice.title }}" class="field-input" required>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Content</label>
+                  <textarea name="content" class="field-input" rows="6">{{ notice.content }}</textarea>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Visibility</label>
+                  <select name="status" class="field-input">
+                    <option value="True" {% if notice.isPublic %}selected{% endif %}>Public — Visible to everyone</option>
+                    <option value="False" {% if not notice.isPublic %}selected{% endif %}>Students Only</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--cream);border-radius:4px;padding:9px 20px;">Cancel</button>
+                <button type="submit" class="btn-submit" style="padding:9px 24px;font-size:0.8rem;">Update Notice</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

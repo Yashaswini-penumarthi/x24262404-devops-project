@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+  /* Page-specific hero bg */
+  .hero-bg {
+    background:
+      linear-gradient(135deg, rgba(13,17,23,0.88) 40%, rgba(13,17,23,0.55) 100%),
+      url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1800&q=80') center/cover no-repeat !important;
+  }
+  .scroll-indicator {
+    position: absolute;
+    bottom: 44px;
+    left: 80px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.45);
+  }
+  .scroll-line {
+    width: 48px; height: 1px;
+    background: rgba(245,240,232,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%   { left: -100%; }
+    50%  { left: 100%; }
+    100% { left: 100%; }
+  }
+  .stats-bar {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    margin: 0;
+    background: rgba(13,17,23,0.96);
+  }
+  .stat-item {
+    flex: 1;
+    padding: 44px 60px;
+    border-right: 1px solid rgba(201,168,76,0.12);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.45);
+  }
+  .notice-section {
+    padding: 100px 80px;
+    background: #0d1117;
+    min-height: 50vh;
+  }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Academic Excellence</div>
+    <h1>Shaping <em>Futures</em><br>Through Education</h1>
+    <p>A centralised management system for students, faculty, and administrators. Access your academic journey, notices, and records — all in one place.</p>
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+      <a href="{% url 'student_login' %}" class="btn-gold">
+        <i class="bi bi-box-arrow-in-right"></i> Student Portal
+      </a>
+      <a href="{% url 'admin_panel' %}" class="btn-outline-gold">
+        Admin Dashboard
+      </a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span class="scroll-line"></span>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">{{ public_notices|length }}+</div>
+    <div class="stat-label">Active Notices</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">24/7</div>
+    <div class="stat-label">Portal Access</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Secure Records</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">Academic Resources</div>
+  </div>
+</div>
+
+<!-- NOTICES -->
+<section class="notice-section">
+  <div class="section-label">Announcements</div>
+  <h2>Public Notices</h2>
+
+  {% if public_notices %}
+  <table class="notice-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for notice in public_notices %}
+      <tr>
+        <td>{{ notice.title }}</td>
+        <td>{{ notice.content }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-notice">
+    <i class="bi bi-megaphone"></i>
+    No public notices available at this time.
+  </div>
+  {% endif %}
+</section>
+
+{% endblock %}

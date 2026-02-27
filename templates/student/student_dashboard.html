@@ -1,0 +1,150 @@
+{% extends 'student/student_base.html' %}
+
+{% block title %}Student — Dashboard{% endblock %}
+{% block top_title %}My Dashboard{% endblock %}
+
+{% block body %}
+<style>
+  .welcome-strip {
+    background:
+      linear-gradient(135deg, rgba(42,157,143,0.12) 0%, rgba(42,157,143,0.03) 100%);
+    border: 1px solid rgba(42,157,143,0.15);
+    border-left: 3px solid var(--teal);
+    border-radius: 8px;
+    padding: 28px 36px;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .welcome-strip h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+  .welcome-strip p { font-size: 0.85rem; color: var(--muted); }
+  .welcome-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(42,157,143,0.1);
+    border: 1px solid rgba(42,157,143,0.25);
+    color: var(--teal);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .welcome-action:hover { background: rgba(42,157,143,0.2); color: var(--teal); }
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .data-group {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .data-group-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  .data-row {
+    display: flex;
+    padding: 14px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    gap: 12px;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-key {
+    font-size: 0.73rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 130px;
+    min-width: 130px;
+    padding-top: 2px;
+  }
+  .data-val {
+    font-size: 0.9rem;
+    color: rgba(240,237,232,0.88);
+    flex: 1;
+  }
+</style>
+
+<div class="page-heading">
+  <div class="eyebrow">Academic Profile</div>
+  <h1>Student Dashboard</h1>
+</div>
+
+<!-- WELCOME -->
+<div class="welcome-strip">
+  <div>
+    <h2>{{ student.full_name }}</h2>
+    <p>Student ID: <strong style="color:var(--teal);">{{ student.stu_id }}</strong> &nbsp;·&nbsp; Course: <strong>{{ student.course }}</strong></p>
+  </div>
+  <a href="{% url 'view_notices' %}" class="welcome-action">
+    <i class="bi bi-bell-fill"></i> View Notices
+  </a>
+</div>
+
+<!-- PROFILE DATA -->
+<div class="profile-grid">
+  <!-- Personal -->
+  <div class="data-group">
+    <div class="data-group-header"><i class="bi bi-person-fill"></i> Personal Information</div>
+    <div class="data-row"><span class="data-key">Full Name</span><span class="data-val">{{ student.full_name }}</span></div>
+    <div class="data-row"><span class="data-key">Father</span><span class="data-val">{{ student.father_name }}</span></div>
+    <div class="data-row"><span class="data-key">Mother</span><span class="data-val">{{ student.mother_name }}</span></div>
+    <div class="data-row"><span class="data-key">Date of Birth</span><span class="data-val">{{ student.date_of_birth }}</span></div>
+    <div class="data-row">
+      <span class="data-key">Gender</span>
+      <span class="data-val">
+        {% if student.gender == "Male" %}
+          <span class="badge-teal">Male</span>
+        {% elif student.gender == "Female" %}
+          <span style="background:rgba(200,100,200,0.12);color:#d4a0d4;border:1px solid rgba(200,100,200,0.25);padding:4px 12px;border-radius:20px;font-size:0.75rem;">Female</span>
+        {% else %}
+          <span class="badge-teal">{{ student.gender }}</span>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  <!-- Academic -->
+  <div class="data-group">
+    <div class="data-group-header"><i class="bi bi-mortarboard-fill"></i> Academic Details</div>
+    <div class="data-row"><span class="data-key">Student ID</span><span class="data-val" style="font-family:monospace;color:var(--teal);">#{{ student.stu_id }}</span></div>
+    <div class="data-row"><span class="data-key">Course</span><span class="data-val"><span class="badge-teal">{{ student.course }}</span></span></div>
+    <div class="data-row"><span class="data-key">Username</span><span class="data-val" style="color:var(--muted);">{{ student.user_name }}</span></div>
+  </div>
+
+  <!-- Contact -->
+  <div class="data-group">
+    <div class="data-group-header"><i class="bi bi-telephone-fill"></i> Contact Information</div>
+    <div class="data-row"><span class="data-key">Email</span><span class="data-val">{{ student.email }}</span></div>
+    <div class="data-row"><span class="data-key">Phone</span><span class="data-val">{{ student.contact_num }}</span></div>
+    <div class="data-row"><span class="data-key">City</span><span class="data-val">{{ student.city }}</span></div>
+    <div class="data-row"><span class="data-key">Address</span><span class="data-val">{{ student.address }}</span></div>
+  </div>
+</div>
+{% endblock %}

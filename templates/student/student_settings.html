@@ -1,0 +1,113 @@
+{% extends 'student/student_base.html' %}
+
+{% block title %}Student — Settings{% endblock %}
+{% block top_title %}Account Settings{% endblock %}
+
+{% block body %}
+<style>
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 28px;
+    align-items: start;
+  }
+  .form-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .form-card-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-card-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+  .form-card-header i { color: var(--teal); }
+  .form-card-body { padding: 28px; }
+  .info-aside {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+  .aside-visual {
+    height: 180px;
+    background:
+      linear-gradient(160deg, rgba(42,157,143,0.15), rgba(8,12,16,0.85)),
+      url('https://images.unsplash.com/photo-1633265486064-086b219458ec?w=600&q=80') center/cover no-repeat;
+  }
+  .aside-content { padding: 24px; }
+  .aside-content h4 { font-family:'Playfair Display',serif; font-size:1rem; color:var(--cream); margin-bottom:10px; }
+  .aside-content p { font-size:0.82rem; color:var(--muted); line-height:1.7; margin-bottom:16px; }
+  .tip-box {
+    background: rgba(42,157,143,0.07);
+    border: 1px solid rgba(42,157,143,0.15);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 0.78rem;
+    color: rgba(240,237,232,0.6);
+    line-height: 1.6;
+  }
+  .tip-box i { color: var(--teal); margin-right: 6px; }
+</style>
+
+<div class="page-heading">
+  <div class="eyebrow">Account</div>
+  <h1>Settings</h1>
+</div>
+
+<div class="settings-grid">
+  <!-- FORM -->
+  <div>
+    <div class="form-card">
+      <div class="form-card-header">
+        <i class="bi bi-key-fill"></i>
+        <h3>Change Password</h3>
+      </div>
+      <div class="form-card-body">
+        <form action="{% url 'student_settings' %}" method="post">
+          {% csrf_token %}
+          <div class="field-group">
+            <label class="field-label">Username</label>
+            <input type="text" name="full_name" value="{{student.user_name}}" class="field-input" readonly style="opacity:0.6;cursor:not-allowed;">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Current Password</label>
+            <input type="text" name="current_pwd" value="{{student.password}}" class="field-input" placeholder="Enter current password">
+          </div>
+          <div class="field-group">
+            <label class="field-label">New Password</label>
+            <input type="password" name="new_pwd" class="field-input" placeholder="Enter a new secure password">
+          </div>
+          <button type="submit" class="btn-teal" style="width:auto;padding:12px 32px;">
+            <i class="bi bi-check-circle-fill" style="margin-right:8px;"></i> Update Password
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASIDE -->
+  <div class="info-aside">
+    <div class="aside-visual"></div>
+    <div class="aside-content">
+      <h4>Password Security</h4>
+      <p>Keep your account safe by using a strong, unique password that you don't use elsewhere.</p>
+      <div class="tip-box">
+        <i class="bi bi-shield-fill-check"></i>
+        Use at least 8 characters with a mix of letters, numbers, and symbols for best security.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Admin — Manage Students{% endblock %}
+{% block top_title %}Manage Students{% endblock %}
+
+{% block body %}
+
+<style>
+  .compact-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compact-table th {
+    font-size: 0.63rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 11px 12px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .compact-table td {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .compact-table tbody tr:hover { background: rgba(201,168,76,0.04); }
+  .compact-table tbody tr:last-child td { border-bottom: none; }
+
+  .name-col {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--cream) !important;
+    font-size: 0.83rem !important;
+  }
+  .id-col {
+    font-family: monospace;
+    font-size: 0.75rem !important;
+    color: var(--gold) !important;
+    letter-spacing: 0.04em;
+  }
+
+  /* gender badges */
+  .g-male   { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); padding: 2px 8px; border-radius: 20px; font-size: 0.65rem; }
+  .g-female { background: rgba(200,100,200,0.1); color: #d4a0d4; border: 1px solid rgba(200,100,200,0.2); padding: 2px 8px; border-radius: 20px; font-size: 0.65rem; }
+  .course-badge { background: rgba(76,175,121,0.12); color: #4caf79; border: 1px solid rgba(76,175,121,0.25); padding: 2px 9px; border-radius: 20px; font-size: 0.65rem; letter-spacing: 0.04em; }
+
+  /* action buttons */
+  .act-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.74rem;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+  .act-del  { background: rgba(224,90,90,0.1); color: #e05a5a; }
+  .act-del:hover  { background: #e05a5a; color: #fff; }
+  .act-edit { background: rgba(201,168,76,0.1); color: var(--gold); }
+  .act-edit:hover { background: var(--gold); color: var(--ink); }
+</style>
+
+<div class="page-heading">
+  <div class="eyebrow">Student Records</div>
+  <h1>Manage Students</h1>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+  <p style="color:var(--muted);font-size:0.84rem;">{{ students|length }} student{{ students|length|pluralize }} enrolled</p>
+  <a href="{% url 'add_student' %}" class="btn-submit" style="text-decoration:none;padding:9px 20px;font-size:0.78rem;">
+    <i class="bi bi-person-plus-fill"></i> Add Student
+  </a>
+</div>
+
+<div class="panel-card" style="overflow-x:auto;">
+  <table class="compact-table">
+    <thead>
+      <tr>
+        <th style="width:36px;">#</th>
+        <th>Student ID</th>
+        <th>Full Name</th>
+        <th>Father</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>City</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Course</th>
+        <th style="width:70px;text-align:center;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td style="color:var(--muted);font-size:0.72rem;">{{ forloop.counter }}</td>
+        <td class="id-col">{{ student.stu_id }}</td>
+        <td class="name-col">{{ student.full_name }}</td>
+        <td style="color:var(--muted);">{{ student.father_name }}</td>
+        <td style="color:var(--muted);font-size:0.76rem;">{{ student.date_of_birth }}</td>
+        <td>
+          {% if student.gender == 'Male' %}
+            <span class="g-male">M</span>
+          {% else %}
+            <span class="g-female">F</span>
+          {% endif %}
+        </td>
+        <td style="color:var(--muted);">{{ student.city }}</td>
+        <td style="color:var(--muted);font-size:0.76rem;">{{ student.email }}</td>
+        <td style="color:var(--muted);font-size:0.76rem;">{{ student.contact_num }}</td>
+        <td><span class="course-badge">{{ student.course }}</span></td>
+        <td style="text-align:center;">
+          <div style="display:flex;gap:5px;justify-content:center;">
+            <a href="{% url 'delete_student' student.id %}" class="act-btn act-del" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+            <button class="act-btn act-edit" data-bs-toggle="modal" data-bs-target="#updateModal{{ student.id }}" title="Edit">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <!-- UPDATE MODAL -->
+      <div class="modal fade" id="updateModal{{ student.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="bi bi-person-fill" style="color:var(--gold);margin-right:8px;"></i>
+                Update Student — {{ student.full_name }}
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{% url 'update_student' student.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+                  <div class="field-group">
+                    <label class="field-label">Full Name</label>
+                    <input type="text" name="full_name" value="{{ student.full_name }}" class="field-input" required>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Student ID</label>
+                    <input type="text" name="stu_id" value="{{ student.stu_id }}" class="field-input" required>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Father's Name</label>
+                    <input type="text" name="f_name" value="{{ student.father_name }}" class="field-input">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Mother's Name</label>
+                    <input type="text" name="m_name" value="{{ student.mother_name }}" class="field-input">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Gender</label>
+                    <select name="gender" class="field-input">
+                      <option value="{{ student.gender }}" selected>{{ student.gender }}</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Date of Birth</label>
+                    <input type="date" name="dob" value="{{ student.date_of_birth }}" class="field-input">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Email</label>
+                    <input type="email" name="stu_email" value="{{ student.email }}" class="field-input" required>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Contact Number</label>
+                    <input type="tel" name="contact_number" value="{{ student.contact_num }}" class="field-input">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">City</label>
+                    <input type="text" name="city" value="{{ student.city }}" class="field-input">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Address</label>
+                    <input type="text" name="address" value="{{ student.address }}" class="field-input">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Course</label>
+                    <select name="course" class="field-input">
+                      <option value="{{ student.course }}" selected>{{ student.course }}</option>
+                      <option value="BSC">BSC</option>
+                      <option value="BA">BA</option>
+                      <option value="BCOM">BCOM</option>
+                      <option value="BBA">BBA</option>
+                      <option value="BCA">BCA</option>
+                      <option value="BTECH">BTECH</option>
+                      <option value="MSC">MSC</option>
+                      <option value="MA">MA</option>
+                      <option value="MCOM">MCOM</option>
+                      <option value="MBA">MBA</option>
+                      <option value="MCA">MCA</option>
+                      <option value="MTECH">MTECH</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Login Credentials -->
+                <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);">
+                  <p style="font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">
+                    <i class="bi bi-key-fill"></i> Login Credentials
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+                    <div class="field-group">
+                      <label class="field-label">Username</label>
+                      <input type="text" name="stu_user_name" value="{{ student.user_name }}" class="field-input">
+                    </div>
+                    <div class="field-group">
+                      <label class="field-label">Password</label>
+                      <input type="password" name="stu_pwd" value="{{ student.password }}" class="field-input">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal"
+                  style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--cream);border-radius:4px;padding:8px 18px;cursor:pointer;font-size:0.82rem;">
+                  Cancel
+                </button>
+                <button type="submit" class="btn-submit" style="padding:8px 22px;font-size:0.8rem;">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
