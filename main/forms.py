@@ -1,5 +1,7 @@
+"""all django forms here"""
 from django import forms
 
+"""Student login form"""
 class StudentLoginForm(forms.Form):
     userName = forms.CharField(
         max_length=50,
@@ -18,3 +20,4 @@ class StudentLoginForm(forms.Form):
             "placeholder": "••••••••"
         })
     )
+    
