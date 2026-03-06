@@ -87,7 +87,7 @@ jobs:
       - name: Run Pylint
         continue-on-error: true
         run: |
-          pylint spend_wise || true
+          pylint main || true
 
       # -------------------------
       # Django Unit Tests
