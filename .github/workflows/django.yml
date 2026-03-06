@@ -87,7 +87,7 @@ jobs:
       - name: Run Pylint
         continue-on-error: true
         run: |
-          pylint main || true
+          pylint main --ignore=migrations || true
 
       # -------------------------
       # Django Unit Tests
