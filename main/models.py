@@ -2,17 +2,16 @@
 
 from django.db import models
 
-# Create your models here.
-
-"""about page model"""
 class AboutPage(models.Model):
+    """About page model."""
     about = models.TextField()
 
     def __str__(self):
         return str(self.about)
 
-"""contact page model"""
+
 class ContactPage(models.Model):
+    """Contact page model."""
     address = models.TextField()
     contact_num = models.IntegerField()
     email = models.EmailField()
@@ -20,8 +19,9 @@ class ContactPage(models.Model):
     def __str__(self):
         return str(self.address)
 
-"""student model"""
+
 class Student(models.Model):
+    """Student model."""
     full_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100)
     mother_name = models.CharField(max_length=100)
@@ -39,8 +39,9 @@ class Student(models.Model):
     def __str__(self):
         return str(self.full_name)
 
-"""notice model"""
+
 class Notice(models.Model):
+    """Notice model."""
     title = models.CharField(max_length=200)
     content = models.TextField()
     isPublic = models.BooleanField(default=False)
@@ -48,8 +49,9 @@ class Notice(models.Model):
     def __str__(self):
         return str(self.title)
 
-"""teacher model"""
+
 class Teacher(models.Model):
+    """Teacher model."""
     full_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=50)
     email = models.EmailField()
@@ -58,4 +60,3 @@ class Teacher(models.Model):
 
     def __str__(self):
         return str(self.full_name)
-    
