@@ -1,8 +1,9 @@
-"""all django forms here"""
+"""Django forms here"""
+
 from django import forms
 
-"""Student login form"""
 class StudentLoginForm(forms.Form):
+    """Student login form"""
     userName = forms.CharField(
         max_length=50,
         label="Username",
