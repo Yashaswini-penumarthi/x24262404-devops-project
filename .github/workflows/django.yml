@@ -77,9 +77,9 @@ jobs:
           pip install -r requirements.txt
           pip install pylint
 
-      - name: Run collectstatic
-        run: |
-          python manage.py collectstatic --noinput
+      # - name: Run collectstatic
+      #   run: |
+      #     python manage.py collectstatic --noinput
 
       # -------------------------
       # Pylint full project linting
