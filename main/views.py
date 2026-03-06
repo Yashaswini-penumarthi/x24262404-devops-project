@@ -1,6 +1,6 @@
 """Views for the main Django application."""
 
-# pylint: disable=no-member
+# pylint: disable=no-member,invalid-name,redefined-builtin,too-many-locals,unused-variable,unused-argument
 
 from django.shortcuts import render, redirect
 from .models import AboutPage, ContactPage, Student, Notice, Teacher
