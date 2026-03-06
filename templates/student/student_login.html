@@ -150,18 +150,40 @@
     <h1>Welcome Back</h1>
     <p class="sub">Sign in to your student account</p>
 
-    <form action="{% url 'student_login' %}" method="post">
-      {% csrf_token %}
-      <div class="field-group">
-        <label class="field-label" for="userName">Username</label>
-        <input type="text" id="userName" name="userName" class="field-input" placeholder="Your student username">
+    <!--<form action="{% url 'student_login' %}" method="post">-->
+    <!--  {% csrf_token %}-->
+    <!--  <div class="field-group">-->
+    <!--    <label class="field-label" for="userName">Username</label>-->
+    <!--    <input type="text" id="userName" name="userName" class="field-input" placeholder="Your student username">-->
+    <!--  </div>-->
+    <!--  <div class="field-group">-->
+    <!--    <label class="field-label" for="stuPwd">Password</label>-->
+    <!--    <input type="password" id="stuPwd" name="stuPwd" class="field-input" placeholder="••••••••">-->
+    <!--  </div>-->
+    <!--  <input type="submit" class="btn-teal" value="Sign In">-->
+    <!--</form>-->
+    
+      <form method="post">
+    {% csrf_token %}
+  
+    {% if form.non_field_errors %}
+      <div style="color:red; margin-bottom:10px;">
+          {{ form.non_field_errors }}
       </div>
-      <div class="field-group">
-        <label class="field-label" for="stuPwd">Password</label>
-        <input type="password" id="stuPwd" name="stuPwd" class="field-input" placeholder="••••••••">
-      </div>
-      <input type="submit" class="btn-teal" value="Sign In">
-    </form>
+    {% endif %}
+  
+    <div class="field-group">
+      <label class="field-label">Username</label>
+      {{ form.userName }}
+    </div>
+  
+    <div class="field-group">
+      <label class="field-label">Password</label>
+      {{ form.stuPwd }}
+    </div>
+  
+    <input type="submit" class="btn-teal" value="Sign In">
+  </form>
 
     <p class="login-footer-note">Need help? Contact your <a href="#">institution administrator</a></p>
   </div>

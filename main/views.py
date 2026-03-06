@@ -206,21 +206,54 @@ def deleteTeacher(request, id):
     teacher_obj.delete()
     return redirect('manage_teachers')
 
-def studentLogin(request):
-    if 'student_user' not in request.session:
-        if request.method == "POST":
-            user_name = request.POST['userName']
-            student_pwd = request.POST['stuPwd']
+# def studentLogin(request):
+#     if 'student_user' not in request.session:
+#         if request.method == "POST":
+#             user_name = request.POST['userName']
+#             student_pwd = request.POST['stuPwd']
             
-            stu_exists = Student.objects.filter(user_name=user_name, password=student_pwd).exists()
+#             stu_exists = Student.objects.filter(user_name=user_name, password=student_pwd).exists()
+#             if stu_exists:
+#                 request.session['student_user'] = user_name
+#                 return redirect('student_dashboard')
+
+#         return render(request, 'student/student_login.html')
+#     else:
+#         return redirect('student_dashboard')
+    
+    
+    
+from .forms import StudentLoginForm
+from .models import Student
+
+
+def studentLogin(request):
+    if 'student_user' in request.session:
+        return redirect('student_dashboard')
+
+    form = StudentLoginForm()
+
+    if request.method == "POST":
+        form = StudentLoginForm(request.POST)
+
+        if form.is_valid():
+            user_name = form.cleaned_data['userName']
+            student_pwd = form.cleaned_data['stuPwd']
+
+            stu_exists = Student.objects.filter(
+                user_name=user_name,
+                password=student_pwd
+            ).exists()
+
             if stu_exists:
                 request.session['student_user'] = user_name
                 return redirect('student_dashboard')
+            else:
+                form.add_error(None, "Invalid username or password")
 
-        return render(request, 'student/student_login.html')
-    else:
-        return redirect('student_dashboard')
-    
+    return render(request, 'student/student_login.html', {'form': form})
+
+
 
 
 def studentDashboard(request):
