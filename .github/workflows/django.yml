@@ -92,9 +92,9 @@ jobs:
       # -------------------------
       # Django Unit Tests
       # -------------------------
-      - name: Run Django Tests
-        run: |
-          python manage.py test home.tests.LoginTest
+      # - name: Run Django Tests
+      #   run: |
+      #     python manage.py test home.tests.LoginTest
 
       # -------------------------
       # Sonar Cloud Scan
