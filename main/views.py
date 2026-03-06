@@ -342,7 +342,7 @@ def viewNotices(request):
 
 
 def studentSettings(request):
-    """Student settings."""
+    """Student settings"""
     if 'student_user' in request.session:
         student_obj = Student.objects.get(
             user_name=request.session['student_user']
