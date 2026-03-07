@@ -123,24 +123,13 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
             -Dsonar.organization=$SONAR_ORG \
+            -Dsonar.exclusions=**/.c9/** \
             -Dsonar.coverage.exclusions=**/* || true
 
           sleep 5
           curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" > sonar_result.json
           cat sonar_result.json
 
-      # -------------------------
-      # Create Deployment Package
-      # -------------------------
-      - name: Create deployment ZIP
-        run: |
-          zip -r deploy.zip . -x "*.git*"
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-package
-          path: deploy.zip
 
   # # =====================================================================
   # # 3️⃣ DEPLOYMENT STAGE (AWS Elastic Beanstalk)
