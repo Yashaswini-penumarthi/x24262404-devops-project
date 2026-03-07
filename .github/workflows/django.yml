@@ -100,7 +100,6 @@ jobs:
       # Sonar Cloud Scan
       # -------------------------
 
-
       - name: Install Sonar Scanner
         run: |
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
@@ -130,8 +129,7 @@ jobs:
           sleep 5
           curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" > sonar_result.json
           cat sonar_result.json
-
-
+          
   # # =====================================================================
   # # 3️⃣ DEPLOYMENT STAGE (AWS Elastic Beanstalk)
   # # =====================================================================
