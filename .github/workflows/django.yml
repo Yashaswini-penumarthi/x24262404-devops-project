@@ -113,7 +113,7 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.python.coverage.reportPaths=coverage.xml \
             -Dsonar.exclusions=.c9/**,**/migrations/**,**/__pycache__/**,**/tests.py \
-            -Dsonar.coverage.exclusions=**/migrations/**,**/tests.py,**/*.html
+            -Dsonar.coverage.exclusions=**/*
       
           sleep 5
           curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" > sonar_result.json
