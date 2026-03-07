@@ -75,9 +75,14 @@ jobs:
       # -------------------------
       # Django Unit Tests
       # -------------------------
-      - name: Run Django Tests
+      # - name: Run Django Tests
+      #   run: |
+      #     python manage.py test
+      
+      - name: Run tests with coverage
         run: |
-          python manage.py test
+          coverage run manage.py test
+          coverage xml
 
       # -------------------------
       # Sonar Cloud Scan
@@ -101,13 +106,22 @@ jobs:
           SONAR_ORG: ${{ secrets.SONAR_ORG }}
  
         run: |
+          # sonar-scanner \
+          #   -Dsonar.login=$SONAR_TOKEN \
+          #   -Dsonar.host.url=https://sonarcloud.io \
+          #   -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+          #   -Dsonar.organization=$SONAR_ORG \
+          #   -Dsonar.exclusions=.c9/**,**/tests.py,**/migrations/**,**/__pycache__/**,**/*.pyc
+          #   -Dsonar.coverage.exclusions=**/* || true
+          
           sonar-scanner \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
             -Dsonar.organization=$SONAR_ORG \
-            -Dsonar.exclusions=.c9/**,**/tests.py,**/migrations/**,**/__pycache__/**,**/*.pyc
-            -Dsonar.coverage.exclusions=**/* || true
+            -Dsonar.python.coverage.reportPaths=coverage.xml \
+            -Dsonar.exclusions=.c9/**,**/migrations/** \
+            -Dsonar.coverage.exclusions=**/tests.py
 
           sleep 5
           curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" > sonar_result.json
