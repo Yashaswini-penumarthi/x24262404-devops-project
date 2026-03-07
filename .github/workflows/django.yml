@@ -43,18 +43,6 @@ jobs:
           echo "Java version: $(java --version)"
           echo "Java installation done"
 
-      
-
-      # - name: Install Sonar Scanner
-      #   run: |
-      #     wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-      #     unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-      #     export PATH=$PATH:./sonar-scanner-5.0.1.3006-linux/bin/
-      #     sonar-scanner --version
-      #     echo "pre build stage completed"
-
-
-
   # =====================================================================
   # 2️⃣ BUILD + TEST STAGE (Sonar Scan, Pylint, Django Tests)
   # =====================================================================
@@ -76,10 +64,6 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pylint
-
-      # - name: Run collectstatic
-      #   run: |
-      #     python manage.py collectstatic --noinput
 
       # -------------------------
       # Pylint full project linting
