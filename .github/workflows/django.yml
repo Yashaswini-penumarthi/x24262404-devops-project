@@ -62,7 +62,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pylint
+          pip install pylint coverage
 
       # -------------------------
       # Pylint full project linting
@@ -81,8 +81,8 @@ jobs:
       
       - name: Run tests with coverage
         run: |
-          coverage run manage.py test
-          coverage xml
+          coverage run --source='.' manage.py test  # Add --source flag
+          coverage xml -i  # -i ignores errors
 
       # -------------------------
       # Sonar Cloud Scan
@@ -98,27 +98,7 @@ jobs:
       - name: Version
         run: |
           sonar-scanner --version
-      
-      # - name: Run Sonar Cloud Scan
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-      #     SONAR_ORG: ${{ secrets.SONAR_ORG }}
- 
-      #   run: |
-      #     sonar-scanner \
-      #       -Dsonar.login=$SONAR_TOKEN \
-      #       -Dsonar.host.url=https://sonarcloud.io \
-      #       -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-      #       -Dsonar.organization=$SONAR_ORG \
-      #       -Dsonar.python.coverage.reportPaths=coverage.xml \
-      #       -Dsonar.exclusions=.c9/**,**/migrations/** \
-      #       -Dsonar.coverage.exclusions=**/tests.py
 
-      #     sleep 5
-      #     curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" > sonar_result.json
-      #     cat sonar_result.json
-      
       - name: Run Sonar Cloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
