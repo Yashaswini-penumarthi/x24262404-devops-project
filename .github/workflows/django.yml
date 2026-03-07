@@ -102,8 +102,8 @@ jobs:
       - name: Run Sonar Cloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORG: ${{ secrets.SONAR_ORG }}
+          SONAR_PROJECT_KEY: Yashaswini-penumarthi_x24262404-devops-project
+          SONAR_ORG: yashaswini-penumarthi
         run: |
           sonar-scanner \
             -Dsonar.login=$SONAR_TOKEN \
