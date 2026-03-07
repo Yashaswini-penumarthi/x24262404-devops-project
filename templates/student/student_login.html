@@ -159,12 +159,12 @@
     {% endif %}
   
     <div class="field-group">
-      <label text="Username" class="field-label">Username</label>
+      <label for="{{ form.userName.id_for_label }}" class="field-label">Username</label>
       {{ form.userName }}
     </div>
-  
+    
     <div class="field-group">
-      <label text="Password" class="field-label">Password</label>
+      <label for="{{ form.stuPwd.id_for_label }}" class="field-label">Password</label>
       {{ form.stuPwd }}
     </div>
   
