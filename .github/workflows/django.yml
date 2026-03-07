@@ -6,7 +6,6 @@ on:
       - main
 
 jobs:
-
   # =====================================================================
   # 1️⃣ PRE-BUILD STAGE (Sonar, Java, Dependencies)
   # =====================================================================
@@ -147,3 +146,4 @@ jobs:
           version_label: "build-${{ github.run_number }}"
           deployment_package: deploy.zip
           wait_for_deployment: false
+          
