@@ -123,7 +123,7 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
             -Dsonar.organization=$SONAR_ORG \
-            -Dsonar.exclusions=**/.c9/** \
+            -Dsonar.exclusions=.c9/**
             -Dsonar.coverage.exclusions=**/* || true
 
           sleep 5
