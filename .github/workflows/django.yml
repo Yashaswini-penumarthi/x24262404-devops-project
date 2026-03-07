@@ -108,7 +108,7 @@ jobs:
           sonar-scanner \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.projectKey=Yashaswini-penumarthi_x24262404-devops-project \
             -Dsonar.organization=$SONAR_ORG \
             -Dsonar.sources=. \
             -Dsonar.python.coverage.reportPaths=coverage.xml \
@@ -116,7 +116,7 @@ jobs:
             -Dsonar.coverage.exclusions=**/*
       
           sleep 5
-          curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" > sonar_result.json
+          curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=Yashaswini-penumarthi_x24262404-devops-project" > sonar_result.json
           cat sonar_result.json
           
   # # =====================================================================
