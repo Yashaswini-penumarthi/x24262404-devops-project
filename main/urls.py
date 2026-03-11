@@ -1,3 +1,5 @@
+"""Django Views Urls here"""
+
 from django.urls import path
 from . import views
 

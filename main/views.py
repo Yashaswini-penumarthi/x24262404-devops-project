@@ -1,4 +1,4 @@
-
+"""Views for the main Django application."""
 
 # pylint: disable=no-member,invalid-name,redefined-builtin,too-many-locals,unused-variable,unused-argument
 
@@ -328,7 +328,7 @@ def updateFaculty(request, id):
         teacher_obj.gender = gender
         teacher_obj.qualification = qualification
         teacher_obj.save()
-    return redirect('manage_teachers')          
+    return redirect('manage_teachers')
 
 
 def viewNotices(request):
@@ -341,7 +341,7 @@ def viewNotices(request):
     return redirect('student_login')
 
 
-def studentSettings(request):                   
+def studentSettings(request):
     """Student settings"""
     if 'student_user' in request.session:
         student_obj = Student.objects.get(

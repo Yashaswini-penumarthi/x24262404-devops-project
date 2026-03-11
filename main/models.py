@@ -1,6 +1,8 @@
+"""Django models here"""
+
 from django.db import models
 
-class AboutPage(models.Model):              
+class AboutPage(models.Model):
     """About page model."""
     about = models.TextField()
 
@@ -58,7 +60,4 @@ class Teacher(models.Model):
 
     def __str__(self):
         return str(self.full_name)
-
-
-
-
+        
