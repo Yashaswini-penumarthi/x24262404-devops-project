@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <style>
     :root {
-      --ink: #0b0f14;
+      --ink: #bcbcbd;
       --sidebar-bg: #112133;
       --gold: #c9a84c;
       --gold-light: #e8c97a;
@@ -89,7 +89,7 @@
     .nav-item i { width: 18px; text-align: center; font-size: 0.95rem; }
     .nav-item:hover {
       color: var(--cream);
-      background: rgba(201,168,76,0.07);
+      background: rgba(245,240,232,0.6);
       border-left-color: var(--gold);
     }
     .nav-item.active {
@@ -153,7 +153,7 @@
     .top-bar {
       position: sticky;
       top: 0; z-index: 50;
-      background: rgba(11,15,20,0.92);
+      background: rgba(245,240,232,0.5);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 48px;
@@ -166,7 +166,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 1rem;
       font-weight: 600;
-      color: var(--cream);
+      color: #000000;
       letter-spacing: 0.02em;
     }
     .top-bar-right {
@@ -389,7 +389,7 @@
         </div>
       </div>
 
-      <div class="nav-group">
+      <!-- <div class="nav-group">
         <div class="nav-group-header" onclick="toggle(this)">
           <i class="bi bi-person-badge-fill"></i> Faculty
           <i class="bi bi-chevron-right chevron"></i>
@@ -398,7 +398,7 @@
           <a href="{% url 'add_teacher' %}" class="nav-sub-item"><i class="bi bi-plus-circle"></i> Add Faculty</a>
           <a href="{% url 'manage_teachers' %}" class="nav-sub-item"><i class="bi bi-list-ul"></i> Manage Faculty</a>
         </div>
-      </div>
+      </div> -->
 
       <div class="nav-group">
         <div class="nav-group-header" onclick="toggle(this)">

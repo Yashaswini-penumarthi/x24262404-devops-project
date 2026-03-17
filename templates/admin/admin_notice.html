@@ -73,6 +73,16 @@
         <label class="field-label">Notice Content</label>
         <textarea name="notice_content" class="field-input" rows="10" placeholder="Write the full notice content here..." required></textarea>
       </div>
+      
+      <div class="field-group">
+        <label class="field-label">Visibility Scope</label>
+      <select name="course" class="field-input">
+          <option value="">-- Select Course --</option>
+          {% for course in courses %}
+              <option value="{{ course }}">{{ course }}</option>
+          {% endfor %}
+      </select>
+      </div>
 
       <div class="field-group">
         <label class="field-label">Visibility Scope</label>
@@ -81,6 +91,7 @@
           <option value="False">Students Only — Visible after login</option>
         </select>
       </div>
+      
 
       <div style="display:flex;gap:12px;margin-top:12px;">
         <button type="submit" class="btn-submit">

@@ -22,7 +22,8 @@
       <tr>
         <th>#</th>
         <th>Title</th>
-        <th>Content Preview</th>
+        <th style="width:50px">Content Preview</th>
+        <th>Course</th>
         <th>Scope</th>
         <th>Actions</th>
       </tr>
@@ -33,6 +34,13 @@
         <td style="color:var(--muted);font-size:0.8rem;">{{ forloop.counter }}</td>
         <td style="font-family:'Playfair Display',serif;font-weight:600;color:var(--cream);font-size:0.92rem;">{{ notice.title }}</td>
         <td style="color:var(--muted);max-width:380px;">{{ notice.content|truncatechars:80 }}</td>
+        <td>
+          {% if notice.course %}
+            <span class="badge-gold">{{ notice.course }}</span>
+          {% else %}
+            <span class="badge-success">All Courses</span>
+          {% endif %}
+        </td>
         <td>
           {% if notice.isPublic %}
             <span class="badge-success"><i class="bi bi-globe2"></i> Public</span>
@@ -70,6 +78,10 @@
                 <div class="field-group">
                   <label class="field-label">Content</label>
                   <textarea name="content" class="field-input" rows="6">{{ notice.content }}</textarea>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Course</label>
+                  <textarea name="content" class="field-input" rows="6">{{ notice.course }}</textarea>
                 </div>
                 <div class="field-group">
                   <label class="field-label">Visibility</label>

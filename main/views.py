@@ -185,27 +185,75 @@ def deleteStudent(request, id):
     return redirect('manage_students')
 
 
+# def addNotice(request):
+#     courses = Student.objects.values_list('course', flat=True).distinct()
+
+#     if request.method == 'POST':
+#         noticeTitle = request.POST['notice_title']
+#         noticeContent = request.POST['notice_content']
+#         isPublic = request.POST['notice_status'] == "True"
+#         course = request.POST.get('course')
+
+#         Notice.objects.create(
+#             title=noticeTitle,
+#             content=noticeContent,
+#             isPublic=isPublic,
+#             course=course
+#         )
+
+#     return render(request, "admin/admin_notice.html", {"courses": courses})
+
+from django.core.mail import send_mail
+from django.conf import settings
+
 def addNotice(request):
-    """Add notice."""
+    courses = Student.objects.values_list('course', flat=True).distinct()
+
     if request.method == 'POST':
         noticeTitle = request.POST['notice_title']
         noticeContent = request.POST['notice_content']
-        isPublic = request.POST['notice_status']
+        isPublic = request.POST['notice_status'] == "True"
+        course = request.POST.get('course')
 
-        add_notice = Notice.objects.create(
+        # Save notice
+        notice = Notice.objects.create(
             title=noticeTitle,
             content=noticeContent,
-            isPublic=isPublic
+            isPublic=isPublic,
+            course=course
         )
-        add_notice.save()
-    return render(request, "admin/admin_notice.html")
+
+        # Fetch students based on course
+        if isPublic:
+            students = Student.objects.all()
+        else:
+            students = Student.objects.filter(course=course)
+
+        # Extract emails
+        email_list = list(students.values_list('email', flat=True))
+
+        # Send email
+        if email_list:
+            send_mail(
+                subject=f"New Notice: {noticeTitle}",
+                message=noticeContent,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=email_list,
+                fail_silently=False,
+            )
+
+    return render(request, "admin/admin_notice.html", {"courses": courses})
+    
 
 
 def manageNotices(request):
-    """Manage notices."""
     all_notices = Notice.objects.all()
-    data = {'notices': all_notices}
-    return render(request, 'admin/manage_notices.html', data)
+    courses = Student.objects.values_list('course', flat=True).distinct()
+
+    return render(request, 'admin/manage_notices.html', {
+        'notices': all_notices,
+        'courses': courses
+    })
 
 
 def deleteNotice(request, id):
@@ -216,21 +264,34 @@ def deleteNotice(request, id):
     return redirect('manage_notices')
 
 
-def updateNotice(request, id):
-    """Update notice."""
-    if request.method == 'POST':
-        title = request.POST['title']
-        content = request.POST['content']
-        status = request.POST['status']
+# def updateNotice(request, id):
+#     """Update notice."""
+#     if request.method == 'POST':
+#         title = request.POST['title']
+#         content = request.POST['content']
+#         status = request.POST['status']
 
+#         notice_obj = Notice.objects.get(id=id)
+#         notice_obj.title = title
+#         notice_obj.content = content
+#         notice_obj.isPublic = status
+
+#         notice_obj.save()
+#     return redirect('manage_notices')
+
+
+def updateNotice(request, id):
+    if request.method == 'POST':
         notice_obj = Notice.objects.get(id=id)
-        notice_obj.title = title
-        notice_obj.content = content
-        notice_obj.isPublic = status
+
+        notice_obj.title = request.POST['title']
+        notice_obj.content = request.POST['content']
+        notice_obj.isPublic = request.POST['status'] == "True"
+        notice_obj.course = request.POST.get('course')
 
         notice_obj.save()
-    return redirect('manage_notices')
 
+    return redirect('manage_notices')
 
 def addTeacher(request):
     """Add teacher."""
@@ -331,10 +392,27 @@ def updateFaculty(request, id):
     return redirect('manage_teachers')
 
 
+# def viewNotices(request):
+#     """Student view notices."""
+#     if 'student_user' in request.session:
+#         student_notice = Notice.objects.filter(isPublic=False)
+#         data = {"notices": student_notice}
+#         return render(request, 'student/view_notices.html', data)
+
+#     return redirect('student_login')
+
+
+from django.db.models import Q
+
 def viewNotices(request):
     """Student view notices."""
     if 'student_user' in request.session:
-        student_notice = Notice.objects.filter(isPublic=False)
+        student = Student.objects.get(user_name=request.session['student_user'])
+
+        student_notice = Notice.objects.filter(
+            Q(isPublic=True) | Q(course=student.course)
+        )
+
         data = {"notices": student_notice}
         return render(request, 'student/view_notices.html', data)
 

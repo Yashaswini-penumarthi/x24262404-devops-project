@@ -1,27 +1,22 @@
-"""Django models here"""
-
 from django.db import models
 
+# Create your models here.
 class AboutPage(models.Model):
-    """About page model."""
     about = models.TextField()
 
     def __str__(self):
-        return str(self.about)
-
+        return self.about
 
 class ContactPage(models.Model):
-    """Contact page model."""
     address = models.TextField()
     contact_num = models.IntegerField()
     email = models.EmailField()
 
     def __str__(self):
-        return str(self.address)
+        return self.address
 
 
 class Student(models.Model):
-    """Student model."""
     full_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100)
     mother_name = models.CharField(max_length=100)
@@ -37,21 +32,29 @@ class Student(models.Model):
     password = models.CharField(max_length=100)
 
     def __str__(self):
-        return str(self.full_name)
+        return self.full_name
+
+
+# class Notice(models.Model):
+#     title = models.CharField(max_length=200)
+#     content = models.TextField()
+#     isPublic = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return self.title
 
 
 class Notice(models.Model):
-    """Notice model."""
     title = models.CharField(max_length=200)
     content = models.TextField()
     isPublic = models.BooleanField(default=False)
+    course = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return str(self.title)
+        return self.title
 
 
 class Teacher(models.Model):
-    """Teacher model."""
     full_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=50)
     email = models.EmailField()
@@ -59,5 +62,5 @@ class Teacher(models.Model):
     qualification = models.TextField()
 
     def __str__(self):
-        return str(self.full_name)
-        
+        return self.full_name
+    
